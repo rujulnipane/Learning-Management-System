@@ -60,25 +60,44 @@ class DbConnection {
 
     public static function get_record($table, $query){
         $conn = DbConnection::getConnection();
-        $sql = "SELECT * FROM $table where ";
-        foreach ($query as $key => $value) {
-            $sql .= $key . "= " . $value;
-        }
-        $result = $conn->query($sql);
-        if ($result === false) {
-            echo "Error: " . $conn->error;
-        } 
-        else{
-            return $result;
-        }
+        $sql = "SELECT * FROM $table WHERE name = ?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
 
+                $stmt->bind_param('s', $query['name']);
+                $stmt->execute();
+            
+                $result = $stmt->get_result();
+            
+                $stmt->close();
+                
+                return $result;
+            } else {
+                echo "Error: Empty query parameter.";
+                return false;
+            }
+        
     }
+    
 
-
-    public function insert_record($table, $array){
+    public static function insert_record($table, $array){
+        $conn = DbConnection::getConnection();
         if($table === "USER"){
-            // $sql = "INSERT INTO USER(name, email_id, password) VALUES ($array['username'], $array['email'], $array['password'])";
+            $sql = "INSERT INTO USER (name, email_id, password) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            if ($stmt) {
+                $stmt->bind_param("sss", $array['name'], $array['email'], $array['password']);
+                $stmt->execute();
+                if ($stmt->affected_rows > 0) {
+                    echo "Record inserted successfully.";
+                } else {
+                    echo "Error: Failed to insert record.";
+                }
+                $stmt->close();
+            } else {
+                echo "Error: " . $conn->error;
+            }
         }
-       
     }
+    
 }
