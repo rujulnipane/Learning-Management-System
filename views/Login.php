@@ -18,7 +18,6 @@
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1 my-2">
         <form action="../controllers/LoginController.php" method="post">
           
-          <!-- Username input -->
           <div class="form-outline mb-4">
             <input type="text" name="username" id="form3Example3" class="form-control form-control-lg"
               placeholder="Enter a valid username" required />

@@ -68,7 +68,7 @@ class DbConnection {
                 $stmt->execute();
             
                 $result = $stmt->get_result();
-            
+                
                 $stmt->close();
                 
                 return $result;
